@@ -1,6 +1,5 @@
 use anyhow::{Context, Ok, Result};
 use downloader_demo::{Photo, download_file_by_url};
-use serde::{Deserialize, Serialize};
 
 #[tokio::main]
 async fn main() -> Result<()> {
