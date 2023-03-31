@@ -1,23 +1,23 @@
-use anyhow::{Context, Ok, Result};
-use downloader_demo::{Photo, download_file_by_url};
+use anyhow::{Ok, Result};
+use scraper::{Html, Selector};
+// use downloader_demo::download_photos;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let url = "https://jsonplaceholder.typicode.com/albums/1/photos";
+    get_movies().await?;
+    Ok(())
+}
 
-    let client = reqwest::Client::new();
-    let resp = client
-        .get(url)
-        .send()
-        .await
-        .context("sending url failed")?
-        .text()
-        .await
-        .context("extrating text failed")?;
-    let photos: Vec<Photo> = serde_json::from_str(&resp)?;
-
-    for photo in photos {
-        download_file_by_url(photo.url, "download").await?;
+pub async fn get_movies() -> Result<()> {
+    let url = "http://down.foodmate.net/special/standard/42.html";
+    let resp = reqwest::get(url).await?;
+    let body = resp.text().await?;
+    let doc = Html::parse_fragment(&body);
+    // body > div:nth-child(7) > div.fl_rb > div > div.bz_list > ul > li:nth-child(1) > div.bz_listl > ul > a > b
+    let selector = Selector::parse("div.bz_listl > ul > a > b").unwrap();
+    for el in doc.select(&selector) {
+        println!("title: {}", el.inner_html());
     }
+
     Ok(())
 }

@@ -11,3 +11,5 @@ tokio = { version = "*", features = ["full"] }
 anyhow = "*"
 serde = { version = "*", features = ["derive"] }
 serde_json = "*"
+scraper = "*"
+jsonpath = "*"
